@@ -60,6 +60,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -114,6 +115,7 @@ import jadx.gui.utils.CacheObject;
 import jadx.gui.utils.CodeUsageInfo;
 import jadx.gui.utils.FontUtils;
 import jadx.gui.utils.JumpPosition;
+import jadx.gui.utils.LafManager;
 import jadx.gui.utils.Link;
 import jadx.gui.utils.NLS;
 import jadx.gui.utils.SystemInfo;
@@ -1068,6 +1070,7 @@ public class MainWindow extends JFrame {
 		DefaultMutableTreeNode treeRootNode = new DefaultMutableTreeNode(NLS.str("msg.open_file"));
 		treeModel = new DefaultTreeModel(treeRootNode);
 		tree = new JTree(treeModel);
+		ToolTipManager.sharedInstance().registerComponent(tree);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1094,7 +1097,11 @@ public class MainWindow extends JFrame {
 					boolean isLeaf, int row, boolean focused) {
 				Component c = super.getTreeCellRendererComponent(tree, value, selected, expanded, isLeaf, row, focused);
 				if (value instanceof JNode) {
-					setIcon(((JNode) value).getIcon());
+					JNode jNode = (JNode) value;
+					setIcon(jNode.getIcon());
+					setToolTipText(jNode.getTooltip());
+				} else {
+					setToolTipText(null);
 				}
 				if (value instanceof JPackage) {
 					setEnabled(((JPackage) value).isEnabled());
@@ -1249,6 +1256,8 @@ public class MainWindow extends JFrame {
 	}
 
 	public void loadSettings() {
+		LafManager.updateLaf(settings);
+
 		Font font = settings.getFont();
 		Font largerFont = font.deriveFont(font.getSize() + 2.f);
 

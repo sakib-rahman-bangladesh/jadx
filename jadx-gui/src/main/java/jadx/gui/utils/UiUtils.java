@@ -28,6 +28,8 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+
 import jadx.core.dex.info.AccessInfo;
 import jadx.core.dex.instructions.args.ArgType;
 import jadx.core.utils.exceptions.JadxRuntimeException;
@@ -36,10 +38,8 @@ import jadx.gui.ui.codearea.AbstractCodeArea;
 public class UiUtils {
 	private static final Logger LOG = LoggerFactory.getLogger(UiUtils.class);
 
-	private static final ImageIcon ICON_STATIC = openIcon("static_co");
-	private static final ImageIcon ICON_FINAL = openIcon("final_co");
-	private static final ImageIcon ICON_ABSTRACT = openIcon("abstract_co");
-	private static final ImageIcon ICON_NATIVE = openIcon("native_co");
+	public static final ImageIcon ICON_STATIC = openSvgIcon("nodes/staticMark");
+	public static final ImageIcon ICON_FINAL = openSvgIcon("nodes/finalMark");
 
 	/**
 	 * The minimum about of memory in bytes we are trying to keep free, otherwise the application may
@@ -54,6 +54,21 @@ public class UiUtils {
 	public static final long MIN_FREE_MEMORY = calculateMinFreeMemory();
 
 	private UiUtils() {
+	}
+
+	public static FlatSVGIcon openSvgIcon(String name) {
+		String iconPath = "icons/" + name + ".svg";
+		FlatSVGIcon icon = new FlatSVGIcon(iconPath);
+		boolean found;
+		try {
+			found = icon.hasFound();
+		} catch (Exception e) {
+			throw new JadxRuntimeException("Failed to load icon: " + iconPath, e);
+		}
+		if (!found) {
+			throw new JadxRuntimeException("Icon not found: " + iconPath);
+		}
+		return icon;
 	}
 
 	public static ImageIcon openIcon(String name) {
@@ -133,12 +148,6 @@ public class UiUtils {
 		}
 		if (af.isStatic()) {
 			overIcon.add(ICON_STATIC);
-		}
-		if (af.isAbstract()) {
-			overIcon.add(ICON_ABSTRACT);
-		}
-		if (af.isNative()) {
-			overIcon.add(ICON_NATIVE);
 		}
 		return overIcon;
 	}

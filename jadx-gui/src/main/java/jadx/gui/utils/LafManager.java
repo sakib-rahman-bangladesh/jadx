@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 
 import ch.qos.logback.classic.Level;
 
@@ -38,7 +39,9 @@ public class LafManager {
 
 	public static void updateLaf(JadxSettings settings) {
 		if (setupLaf(getThemeClass(settings))) {
+			// update all components
 			FlatLaf.updateUI();
+			FlatAnimatedLafChange.hideSnapshotWithAnimation();
 		}
 	}
 
@@ -89,6 +92,7 @@ public class LafManager {
 
 	private static boolean applyLaf(String theme) {
 		try {
+			FlatAnimatedLafChange.showSnapshot();
 			UIManager.setLookAndFeel(theme);
 			return true;
 		} catch (Exception e) {

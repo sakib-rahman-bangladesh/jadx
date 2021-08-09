@@ -28,6 +28,9 @@ import jadx.gui.ui.codearea.AbstractCodeArea;
 import jadx.gui.ui.codearea.AbstractCodeContentPanel;
 import jadx.gui.ui.codearea.ClassCodeContentPanel;
 import jadx.gui.ui.codearea.SmaliArea;
+import jadx.gui.ui.panel.ContentPanel;
+import jadx.gui.ui.panel.HtmlPanel;
+import jadx.gui.ui.panel.ImagePanel;
 import jadx.gui.utils.JumpManager;
 import jadx.gui.utils.JumpPosition;
 
@@ -303,7 +306,7 @@ public class TabbedPane extends JTabbedPane {
 	}
 
 	@Nullable
-	ContentPanel getSelectedCodePanel() {
+	public ContentPanel getSelectedCodePanel() {
 		return (ContentPanel) getSelectedComponent();
 	}
 
